@@ -10,28 +10,15 @@
 class Solution {
 public:
     int longestConsecutive(TreeNode* root) {
-        int longest = 0;
-        queue<pair<TreeNode*, int>> queue;
-        if (root)
-            queue.push(pair<TreeNode*, int>(root,1));
-        while(!queue.empty()) {
-            TreeNode *node = queue.front().first;
-            int currentLevel = queue.front().second;
-            longest = max(longest, currentLevel);
-            queue.pop();
-            if (node->left) {
-                int left = 1;
-                if (node->left->val == node->val + 1)
-                    left = currentLevel +1;
-                queue.push(pair<TreeNode*, int>(node->left, left));
-            }
-            if (node->right) {
-                int right = 1;
-                if (node->right->val == node->val + 1)
-                    right = currentLevel +1;
-                queue.push(pair<TreeNode*, int>(node->right, right));
-            }
-        }
-        return longest;
+        return search(root, NULL, 0);
+    }
+    
+    int search(TreeNode *curr, TreeNode* parent, int len) {
+        int currlen = 1;
+        if (!curr)
+            return len;
+            
+        currlen = ((parent) && (1 + parent->val == curr->val))? len+1:1;
+        return max(len, max(search(curr->left, curr, currlen),search(curr->right, curr, currlen)));
     }
 };
